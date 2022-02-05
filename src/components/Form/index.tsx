@@ -37,7 +37,7 @@ interface IDate {
 }
 
 const Form: React.FC = () => {
-    const { quemChamou, setquemChamou, quemNome,qualId } = useContext(QuemChamouContext)
+    const { quemChamou, setquemChamou, quemNome, qualId } = useContext(QuemChamouContext)
     const push = useNavigate();
 
     const lista = [
@@ -255,9 +255,8 @@ const Form: React.FC = () => {
 
     };
 
-    const hadleSumbmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        
+    const salvarCadastro = ()=>{
+        alert("Foi certo")
         api.post("/", date).then(() => {
 
 
@@ -272,24 +271,22 @@ const Form: React.FC = () => {
                 console.log(err)
             }
         })
-
-    }, [date])
+    }
+  
 
     const salveEdit = () => {
         api.patch(`id/${qualId}`, date).then(response => {
             push("/")
 
+
         });
 
-        
+
     }
 
     useEffect(() => {
-        api.get("/count").then( res =>{
-            const r = res.data.rows+1
-            setDate({...date, id: res.data.rows+1})
-           
-        }) 
+        
+
         if ((quemNome !== "") && (quemChamou == "ED")) {
             // id/${qualId}
             api.get(`/search?id=${qualId}`)
@@ -326,6 +323,35 @@ const Form: React.FC = () => {
                 });
 
 
+        }else{
+            api.get("/count").then(res => {
+                const r = res.data.rows + 1
+                setDate({ ...date, id: res.data.rows + 1 })
+    
+            })
+            setName("")
+                    setDataNascimento("")
+                    setPeriodoEscola("")
+                    setEscola("")
+                    setTelFoneRec("")
+                    setPeriodoRelfe("")
+                    setCpf("")
+                    setRg("")
+                    setSexo("")
+                    setNis("")
+                    setEndereco("")
+                    setAno("")
+                    setBairro("")
+                    setPontoRef("")
+                    setTel1("")
+                    setTel2("")
+                    setSerie("")
+                    setDesLig("")
+                    setObs("")
+                    setNomePai("")
+                    setNomeMae("")
+                    setNomeRespo("")
+                    setParentesco("")
         }
 
 
@@ -341,19 +367,20 @@ const Form: React.FC = () => {
             <Container className="card">
 
 
-                <form onSubmit={hadleSumbmit}>
+                <form >
 
-                    <h1 style={{fontSize:30}}>{quemChamou === 'CA' ? "Ficha de Matrícula" : "Dados do Matriculado"}</h1>
+                    <h1 style={{ fontSize: 30 }}>{quemChamou === 'CA' ? "Ficha de Matrícula" : "Dados do Matriculado"}</h1>
 
 
                     <fieldset>
                         <legend>Identificação Do Beneficiário</legend>
                         <div className="mb-10 form-group">
                             <label className="form-label" htmlFor="nome">Nome do Beneficiário</label>
-                            <input type="text" name="nome" id="nome"
+                            <input type="text" name="nome" id="nome" required
+
                                 className="form-control"
                                 style={{}}
-                                required
+
 
                                 onFocus={focusHandler}
                                 onBlur={blurHandler}
@@ -370,7 +397,7 @@ const Form: React.FC = () => {
                                 <div className="mb-3 form-group m-1">
                                     <label className="form-label" htmlFor="dataNascimento">Data de Nascimento:</label>
                                     <input className="" type="date" name="dataNascimento" id="dataNascimento" placeholder="Digite a data"
-
+                                        required
                                         value={dataNascimento}
                                         onChange={changeHandler}
                                         onClick={() => setPosicao(3)} />
@@ -544,7 +571,7 @@ const Form: React.FC = () => {
                             </div>
                             <div className="mb-3 form-group m-1">
                                 <label className="form-label" htmlFor="periodo">Período da Escola:</label><br />
-                                <input style={{ width: 300 }} type="number" name="periodo" id="periodo"
+                                <input style={{ width: 300 }} type="text" name="periodo" id="periodo"
                                     placeholder="Periodo da escola"
                                     value={periodoEscola}
                                     onChange={changeHandler}
@@ -571,7 +598,7 @@ const Form: React.FC = () => {
 
                     <fieldset>
                         <legend>Relato de Desligamento</legend>
-                        <div style={{ justifyContent:"center" }}>
+                        <div style={{ justifyContent: "center" }}>
                             <div className="mb-3 form-group m-1">
                                 <label htmlFor="dataDesligamento">Data de Desligamento</label> <br />
                                 <input type="date" name="dataDesligamento" id="dataDesligamento"
@@ -580,7 +607,7 @@ const Form: React.FC = () => {
                                     onClick={e => setPosicao(17)} />
 
                             </div>
-                            <div className="mb-3 form-group" style={{margin:10}}>
+                            <div className="mb-3 form-group" style={{ margin: 10 }}>
                                 <label htmlFor="obs">OBS:</label><br />
                                 <FormGroup>
 
@@ -590,15 +617,15 @@ const Form: React.FC = () => {
                                         onChange={changeHandler}
                                         onClick={e => setPosicao(18)}
                                         placeholder="Digite a observação do desligamento"
-                                        style={{width:"100%", height:200}} />
+                                        style={{ width: "100%", height: 200 }} />
                                 </FormGroup>
-                                
+
                             </div>
                         </div>
                     </fieldset>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {quemChamou === 'CA' ?
-                            <button type="submit" className="btn btn-success m-4 btn-ajuste"
+                            <button  className="btn btn-success m-4 btn-ajuste" onClick={()=>salvarCadastro()}
 
                             >Cadastrar</button>
                             :
